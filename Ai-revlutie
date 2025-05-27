@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De AI Revolutie: Een Race van Innovatie (2020-2025) - Interactief</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .timeline-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .timeline-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .timeline-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        .timeline-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .card-content h3 {
+            font-size: 1.125rem; 
+            font-weight: 600; 
+            margin-bottom: 0.5rem; 
+        }
+        .card-content p {
+            font-size: 0.875rem; 
+            line-height: 1.4; 
+        }
+        .section-title {
+            font-size: 1.875rem; 
+            font-weight: 700; 
+            color: #003f5c; 
+            margin-bottom: 1rem; 
+            text-align: center;
+        }
+        .section-intro {
+            font-size: 1rem; 
+            color: #333333;
+            margin-bottom: 2rem; 
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .timeline-event {
+            min-width: 200px; 
+        }
+        .flowchart-step {
+            border: 2px solid #2f4b7c; 
+            background-color: #e0e7ff; 
+            color: #003f5c; 
+        }
+        .flowchart-arrow {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 15px solid #2f4b7c; 
+            margin: 8px auto; 
+        }
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .modal-close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+        .modal-close-button:hover,
+        .modal-close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .gemini-button {
+            background-color: #ffa600;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            border: none;
+            margin-top: 10px;
+        }
+        .gemini-button:hover {
+            background-color: #cc8500;
+        }
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #003f5c; /* Blue */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-gray-800">
+    <!--
+    Plan voor Infographic Structuur:
+    1.  Titel: De AI Revolutie: Een Race van Innovatie (2020-2025)
+    2.  Introductie: Samenvatting van de groei en de "race".
+    3.  Sectie 1: De Spelers op het Veld (Key Player Positioning) - HTML/CSS Kaarten. + Gemini API knop
+    4.  Sectie 2: De Versnelling van Innovatie (Model Release Cadans & Tijdlijn) - HTML/CSS/Tailwind Tijdlijn.
+    5.  Sectie 3: De Groei van Kracht (Schaalfactoren) - Chart.js Lijn- en Staafdiagrammen (Parameters, Trainingsdata, Contextvenster).
+    6.  Sectie 4: Het Meten van de Sprong (Benchmark Prestaties) - Chart.js Lijn-/Staafdiagrammen (MMLU, HumanEval). + Gemini API knop
+    7.  Sectie 5: Architecturale Mijlpalen - HTML/CSS/Tailwind Flowchart (Transformer -> MoE etc.).
+    8.  Sectie 6: Het Veranderende Ecosysteem - Chart.js Staaf-/Lijndiagrammen (VS/China, Investeringen).
+    9.  Sectie 7: Opkomende Uitdagingen & Conclusie - HTML/CSS Lijst/Callouts.
+
+    Gekozen kleurenpalet: Brilliant Blues (aangepast) - Primaire tinten: #003f5c (Donkerblauw), #2f4b7c (Middenblauw), #665191 (Paarsblauw), Accent: #ffa600 (Oranje/Geel), Neutraal achtergrond: #f8f9fa (Heel Lichtgrijs), Kaart achtergrond: #FFFFFF (Wit), Tekst: #333333 (Donkergrijs).
+
+    Visualisatie Keuzes & Justificatie (NO SVG, NO MERMAID JS):
+    - Key Players: HTML/CSS Kaarten. Doel: Inform/Organize. Reden: Overzichtelijk.
+    - Tijdlijn: HTML/CSS/Tailwind. Doel: Change/Organize. Reden: Kern "race" visualisatie, geen JS lib toegestaan.
+    - Parametergroei: Chart.js Lijngrafiek. Doel: Change. Reden: Trend over tijd.
+    - Trainingsdata Groei: Chart.js Staafdiagram. Doel: Compare/Change. Reden: Vergelijkt volumes.
+    - Contextvenster Expansie: Chart.js Lijngrafiek. Doel: Change. Reden: Trend over tijd.
+    - MMLU/HumanEval Scores: Chart.js Lijn-/Staafdiagram. Doel: Compare/Change. Reden: Prestatieverbetering.
+    - Architecturale Evolutie: HTML/CSS/Tailwind Flowchart. Doel: Organize/Process. Reden: Opeenvolging, geen SVG/Mermaid.
+    - VS/China Modellen: Chart.js Staafdiagram. Doel: Compare. Reden: Eenvoudige vergelijking.
+    - GenAI Investeringen: Chart.js Lijngrafiek. Doel: Change. Reden: Trend over tijd.
+    - Uitdagingen: HTML/CSS Lijst/Callouts. Doel: Inform/Organize. Reden: Duidelijke presentatie.
+
+    Bevestiging: Er is GEEN Mermaid JS en GEEN SVG gebruikt in deze output. Alle diagrammen en grafieken zijn gemaakt met Chart.js (Canvas) of pure HTML/CSS/Tailwind.
+    Gemini API integraties toegevoegd voor spelers en benchmarks.
+    -->
+
+    <header class="bg-gradient-to-r from-[#003f5c] to-[#2f4b7c] text-white p-8 md:p-12 text-center rounded-b-xl shadow-lg">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">De AI Revolutie: Een Race van Innovatie (2020-2025)</h1>
+        <p class="text-lg md:text-xl max-w-3xl mx-auto">
+            De afgelopen vijf jaar is de wereld van Artificiële Intelligentie getuige geweest van een ongekende versnelling. Deze interactieve infographic duikt in de dynamische ontwikkelingen, de sleutelspelers, de exponentiële groei in capaciteiten en de veranderende landschappen die de AI-race definiëren. Gebruik de ✨ knoppen om meer te weten te komen met Gemini!
+        </p>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8 space-y-12 md:space-y-16">
+
+        <section id="spelers" class="py-8">
+            <h2 class="section-title">De Spelers op het Veld</h2>
+            <p class="section-intro">
+                Een dynamische mix van techgiganten en innovatieve startups stuwt de AI-vooruitgang. Hun strategische zetten en modelreleases bepalen het tempo en de richting van de ontwikkelingen. Klik op de ✨ knop voor meer info!
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg card-content hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-[#003f5c]">🚀 OpenAI</h3>
+                        <p>Consistent grensverleggend met modellen als GPT-3, ChatGPT, GPT-4, en het videogeneneratiemodel Sora. Focus op LLM-capaciteiten en multimodaliteit.</p>
+                    </div>
+                    <button class="gemini-button mt-4" onclick="showPlayerModal('OpenAI')">✨ Vraag AI Expert over OpenAI</button>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg card-content hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-[#003f5c]">🧠 Google (DeepMind)</h3>
+                        <p>Een krachtpatser in AI-onderzoek met invloedrijke modellen zoals PaLM en de Gemini-familie. Sterke nadruk op multimodaliteit, efficiëntie en grote contextvensters.</p>
+                    </div>
+                    <button class="gemini-button mt-4" onclick="showPlayerModal('Google (DeepMind)')">✨ Vraag AI Expert over Google</button>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg card-content hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-[#003f5c]">🌐 Meta AI</h3>
+                        <p>Een voorvechter van open-source AI, met de populaire Llama-serie als vlaggenschip. Stimuleert toegankelijkheid en een competitief open-source ecosysteem.</p>
+                    </div>
+                    <button class="gemini-button mt-4" onclick="showPlayerModal('Meta AI')">✨ Vraag AI Expert over Meta AI</button>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg card-content hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-[#003f5c]">🛡️ Anthropic</h3>
+                        <p>Focus op AI-veiligheid naast capaciteit, bekend van de Claude-modelfamilie. Nadruk op grote contextvensters en robuust redeneervermogen.</p>
+                    </div>
+                    <button class="gemini-button mt-4" onclick="showPlayerModal('Anthropic')">✨ Vraag AI Expert over Anthropic</button>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg card-content hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-[#003f5c]">🎨 Stability AI & Midjourney</h3>
+                        <p>Sleutelspelers in beeldgeneratie. Stability AI met open-source Stable Diffusion, Midjourney met hoogwaardige propriëtaire modellen.</p>
+                    </div>
+                     <button class="gemini-button mt-4" onclick="showPlayerModal('Stability AI en Midjourney')">✨ Vraag AI Expert hierover</button>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg card-content hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-[#003f5c]">⚡ Nieuwe Uitdagers (o.a. Mistral AI, xAI, DeepSeek)</h3>
+                        <p>Snelgroeiende bedrijven en labs die met innovatieve (vaak open-source) modellen de gevestigde orde uitdagen en de diversiteit in het AI-landschap vergroten.</p>
+                    </div>
+                    <button class="gemini-button mt-4" onclick="showPlayerModal('Nieuwe Uitdagers zoals Mistral AI, xAI, DeepSeek')">✨ Vraag AI Expert hierover</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="tijdlijn" class="py-8">
+            <h2 class="section-title">De Versnelling van Innovatie: Een Tijdlijn</h2>
+            <p class="section-intro">
+                De frequentie van modelreleases is significant toegenomen, wat de intense concurrentie en snelle iteratie in de AI-ontwikkeling illustreert. De "halfwaardetijd" van een state-of-the-art model krimpt zienderogen.
+            </p>
+            <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg">
+                <div class="timeline-container overflow-x-auto pb-4">
+                    <div class="flex space-x-8 min-w-max">
+                        
+                        <div class="flex flex-col items-center p-2">
+                            <h4 class="font-semibold text-lg mb-2 text-[#003f5c]">2020</h4>
+                            <div class="space-y-3">
+                                <div class="bg-sky-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Mei:</strong> OpenAI - GPT-3 (175B params)</div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-center p-2">
+                            <h4 class="font-semibold text-lg mb-2 text-[#003f5c]">2021</h4>
+                            <div class="space-y-3">
+                                <div class="bg-sky-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Jan:</strong> OpenAI - DALL-E (1e versie)</div>
+                                <div class="bg-sky-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Aug:</strong> AI21 Labs - Jurassic-1</div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-center p-2">
+                            <h4 class="font-semibold text-lg mb-2 text-[#003f5c]">2022</h4>
+                            <div class="space-y-3">
+                                <div class="bg-sky-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Feb:</strong> Midjourney V1</div>
+                                <div class="bg-sky-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Apr:</strong> Google - PaLM (540B params)</div>
+                                <div class="bg-sky-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Apr:</strong> OpenAI - DALL-E 2</div>
+                                <div class="bg-sky-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Aug:</strong> Stability AI - Stable Diffusion v1</div>
+                                <div class="bg-sky-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Nov:</strong> OpenAI - ChatGPT</div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-center p-2">
+                            <h4 class="font-semibold text-lg mb-2 text-[#003f5c]">2023</h4>
+                            <div class="space-y-3">
+                                <div class="bg-indigo-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Feb:</strong> Meta AI - LLaMA 1 (tot 65B)</div>
+                                <div class="bg-indigo-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Mrt:</strong> OpenAI - GPT-4 (Multimodaal)</div>
+                                <div class="bg-indigo-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Mrt:</strong> Anthropic - Claude 1</div>
+                                <div class="bg-indigo-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Jul:</strong> Meta AI - Llama 2 (tot 70B)</div>
+                                <div class="bg-indigo-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Jul:</strong> Stability AI - SDXL 1.0</div>
+                                <div class="bg-indigo-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Jul:</strong> Anthropic - Claude 2 (100K context)</div>
+                                <div class="bg-indigo-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Sep:</strong> Mistral AI - Mistral 7B</div>
+                                <div class="bg-indigo-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Dec:</strong> Google - Gemini 1.0 (Ultra, Pro, Nano)</div>
+                                <div class="bg-indigo-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Dec:</strong> Mistral AI - Mixtral 8x7B (MoE)</div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-center p-2">
+                            <h4 class="font-semibold text-lg mb-2 text-[#003f5c]">2024</h4>
+                            <div class="space-y-3">
+                                <div class="bg-purple-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Feb:</strong> Google - Gemini 1.5 Pro (1M context)</div>
+                                <div class="bg-purple-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Feb:</strong> OpenAI - Sora (Video Preview)</div>
+                                <div class="bg-purple-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Mrt:</strong> Anthropic - Claude 3 (Opus, Sonnet, Haiku)</div>
+                                <div class="bg-purple-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Apr:</strong> Meta AI - Llama 3 (tot 70B, 405B gepland)</div>
+                                 <div class="bg-purple-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Jun:</strong> Anthropic - Claude 3.5 Sonnet</div>
+                                <div class="bg-purple-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Dec:</strong> OpenAI - Sora (Publiek), o1</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col items-center p-2">
+                            <h4 class="font-semibold text-lg mb-2 text-[#003f5c]">2025 (Begin)</h4>
+                            <div class="space-y-3">
+                                <div class="bg-pink-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Jan:</strong> OpenAI - o3-mini, Operator Preview</div>
+                                <div class="bg-pink-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Jan:</strong> DeepSeek R1</div>
+                                <div class="bg-pink-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Feb:</strong> OpenAI - GPT-4.5</div>
+                                <div class="bg-pink-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Feb:</strong> Anthropic - Claude 3.7 Sonnet</div>
+                                <div class="bg-pink-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Feb:</strong> Google - Gemini 2.0 Flash</div>
+                                <div class="bg-pink-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Mrt:</strong> Google - Gemini 2.5 Pro/Flash</div>
+                                <div class="bg-pink-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Mrt:</strong> Google - Gemma 3</div>
+                                <div class="bg-pink-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Apr:</strong> Meta AI - Llama 4 (Scout, Maverick, Behemoth)</div>
+                                <div class="bg-pink-100 p-3 rounded-lg shadow timeline-event text-sm"><strong>Mei:</strong> Anthropic - Claude 4</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                 <p class="text-xs text-gray-600 mt-4 text-center">Dit is een selectie van belangrijke releases en is niet uitputtend. De dichtheid van releases, vooral in 2023-2025, illustreert de versnelde innovatie.</p>
+            </div>
+        </section>
+
+        <section id="schaalfactoren" class="py-8">
+            <h2 class="section-title">De Groei van Kracht: Parameters, Data & Context</h2>
+            <p class="section-intro">
+                De schaal waarop AI-modellen worden getraind is exponentieel gegroeid. Meer parameters, grotere datasets en uitgebreidere contextvensters zijn cruciale drijfveren voor hun verbeterde capaciteiten en het ontstaan van emergente vaardigheden.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold mb-3 text-center text-[#2f4b7c]">Parametergroei Vlaggenschip LLM's</h3>
+                    <div class="chart-container h-72 md:h-96 max-h-[400px]">
+                        <canvas id="paramChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-3 text-center">Toont de toename in miljarden parameters voor geselecteerde modellen.</p>
+                </div>
+                <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold mb-3 text-center text-[#2f4b7c]">Trainingsdata Grootte (Tokens)</h3>
+                    <div class="chart-container h-72 md:h-96 max-h-[400px]">
+                        <canvas id="dataChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-3 text-center">Illustreert de groei in biljoenen tokens gebruikt voor training.</p>
+                </div>
+                <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg md:col-span-2 lg:col-span-1">
+                    <h3 class="text-xl font-semibold mb-3 text-center text-[#2f4b7c]">Expansie Contextvenster</h3>
+                    <div class="chart-container h-72 md:h-96 max-h-[400px]">
+                        <canvas id="contextChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-3 text-center">Toont de toename in maximale tokens die modellen kunnen verwerken.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="benchmarks" class="py-8">
+            <h2 class="section-title">Het Meten van de Sprong: Benchmark Prestaties</h2>
+            <p class="section-intro">
+                Benchmarks zijn cruciaal voor het meten van AI-vooruitgang. De prestaties op tests zoals MMLU (kennis & redeneren) en HumanEval (coderen) zijn significant verbeterd, hoewel benchmarks zelf ook continu evolueren. Klik op de ✨ knop voor uitleg.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-xl font-semibold text-center text-[#665191]">MMLU Score Progressie (%)</h3>
+                        <button class="gemini-button !mt-0" onclick="showBenchmarkModal('MMLU')">✨ Verklaar MMLU</button>
+                    </div>
+                    <div class="chart-container h-80 md:h-96 max-h-[450px]">
+                        <canvas id="mmluChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-3 text-center">Massive Multitask Language Understanding scores (5-shot / few-shot).</p>
+                </div>
+                <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg">
+                     <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-xl font-semibold text-center text-[#665191]">HumanEval Score Progressie (pass@1, %)</h3>
+                        <button class="gemini-button !mt-0" onclick="showBenchmarkModal('HumanEval')">✨ Verklaar HumanEval</button>
+                    </div>
+                    <div class="chart-container h-80 md:h-96 max-h-[450px]">
+                        <canvas id="humanEvalChart"></canvas>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-3 text-center">Python code generatie prestaties (0-shot).</p>
+                </div>
+            </div>
+            <div class="mt-8 bg-white p-6 rounded-xl shadow-lg text-center">
+                <div class="flex justify-center items-center mb-2">
+                    <h3 class="text-xl font-semibold text-[#665191] mr-4">Opmerkelijke Sprong: SWE-Bench</h3>
+                    <button class="gemini-button !mt-0" onclick="showBenchmarkModal('SWE-Bench')">✨ Verklaar SWE-Bench</button>
+                </div>
+                <p class="text-5xl font-bold text-[#ffa600] my-3">4.4% ➔ 71.7%</p>
+                <p class="text-gray-700">De prestaties op de Software Engineering benchmark (SWE-Bench) stegen van 4.4% probleemoplossing in 2023 naar 71.7% in 2024, een indicatie van sterk verbeterde praktische codeervaardigheden.</p>
+            </div>
+        </section>
+
+        <section id="architectuur" class="py-8">
+            <h2 class="section-title">Architecturale Mijlpalen</h2>
+            <p class="section-intro">
+                Naast schaalvergroting hebben architecturale innovaties de efficiëntie en capaciteiten van AI-modellen significant verbeterd. De Transformer blijft fundamenteel, maar evoluties zijn cruciaal.
+            </p>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <div class="flex flex-col md:flex-row justify-around items-center space-y-6 md:space-y-0 md:space-x-4 text-center">
+                    <div class="flex flex-col items-center">
+                        <div class="p-4 rounded-lg shadow-md flowchart-step w-48"><strong>Transformer (2017)</strong><p class="text-xs">Basisarchitectuur</p></div>
+                        <div class="flowchart-arrow"></div>
+                        <div class="p-4 rounded-lg shadow-md flowchart-step w-48"><strong>Schaalwetten</strong><p class="text-xs">Begrip van schaalimpact</p></div>
+                    </div>
+                    <div class="hidden md:block flowchart-arrow rotate-[-90deg] !m-0"></div>
+                     <div class="md:hidden flowchart-arrow"></div>
+                    <div class="flex flex-col items-center">
+                        <div class="p-4 rounded-lg shadow-md flowchart-step w-48"><strong>Mixture-of-Experts (MoE)</strong><p class="text-xs">Efficiënte schaalvergroting (Mixtral, Gemini 1.5, Llama 4)</p></div>
+                         <div class="flowchart-arrow"></div>
+                        <div class="p-4 rounded-lg shadow-md flowchart-step w-48"><strong>Natuurlijke Multimodaliteit</strong><p class="text-xs">Geïntegreerde verwerking (GPT-4, Gemini, Claude 3/4, Llama 4)</p></div>
+                    </div>
+                     <div class="hidden md:block flowchart-arrow rotate-[-90deg] !m-0"></div>
+                     <div class="md:hidden flowchart-arrow"></div>
+                    <div class="flex flex-col items-center">
+                        <div class="p-4 rounded-lg shadow-md flowchart-step w-48"><strong>Geavanceerde Diffusietechnieken</strong><p class="text-xs">Beeld/Video (Stable Diffusion, Sora)</p></div>
+                         <div class="flowchart-arrow"></div>
+                        <div class="p-4 rounded-lg shadow-md flowchart-step w-48"><strong>Efficiënte Aandacht</strong><p class="text-xs">GQA, SWA (Llama 2, Mistral)</p></div>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-700 mt-6">
+                    Deze innovaties, zoals Mixture-of-Experts (MoE) voor efficiëntere, grotere modellen en natuurlijke multimodaliteit voor een dieper begrip over verschillende data types (tekst, beeld, audio), stuwen de grenzen van AI verder. MoE helpt de inferentiekosten te beheersen, terwijl multimodale modellen rijkere interacties en toepassingen mogelijk maken.
+                </p>
+            </div>
+        </section>
+
+        <section id="ecosysteem" class="py-8">
+            <h2 class="section-title">Het Veranderende Ecosysteem</h2>
+            <p class="section-intro">
+                De AI-race wordt beïnvloed door geopolitieke concurrentie, de transformerende kracht van open-source modellen, en massale investeringen die de innovatie en adoptie aanjagen.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold mb-3 text-center text-[#003f5c]">VS vs. China: Model Productie (2024)</h3>
+                     <div class="chart-container h-64 md:h-72 max-h-[350px]">
+                        <canvas id="geoChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-700 mt-4">De VS leidde in 2024 met 40 opmerkelijke AI-modellen, vergeleken met 15 uit China. China dicht echter snel de kwalitatieve prestatiekloof op belangrijke benchmarks.</p>
+                </div>
+                <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold mb-3 text-center text-[#003f5c]">Particuliere Investeringen in Generatieve AI</h3>
+                    <div class="chart-container h-64 md:h-72 max-h-[350px]">
+                        <canvas id="investmentChart"></canvas>
+                    </div>
+                    <p class="text-sm text-gray-700 mt-4">Wereldwijde particuliere investeringen in generatieve AI bereikten $33.9 miljard in 2024, een stijging van 18.7% ten opzichte van 2023, wat de enorme economische interesse en het potentieel aantoont.</p>
+                </div>
+            </div>
+            <div class="mt-8 bg-white p-6 rounded-xl shadow-lg">
+                <h3 class="text-2xl font-semibold mb-3 text-center text-[#2f4b7c]">De Kracht van Open Source</h3>
+                <p class="text-gray-700 leading-relaxed">
+                    Open-source modellen (zoals Meta's Llama-serie, Mistral AI's modellen, Stability AI's Stable Diffusion) democratiseren de toegang tot krachtige AI. Ze stimuleren innovatie, zijn vaak kosteneffectiever en dagen propriëtaire modellen uit. Deze trend versnelt de algehele adoptie en ontwikkeling, maar brengt ook uitdagingen met zich mee voor governance en het beheersen van risico's. De "open vs. gesloten" dynamiek is een centraal strategisch strijdtoneel geworden.
+                </p>
+            </div>
+        </section>
+
+        <section id="uitdagingen_conclusie" class="py-8">
+            <h2 class="section-title">Uitdagingen & De Weg Vooruit</h2>
+            <p class="section-intro">
+                De snelle vooruitgang van AI brengt immense kansen, maar ook significante uitdagingen op het gebied van ethiek, kosten, maatschappelijke impact en regulering. De "race" evolueert naar efficiëntie, veiligheid en verantwoorde inzet.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-lg card-content">
+                    <h3 class="text-[#665191]">⚖️ Ethische Zorgen & Verantwoorde AI</h3>
+                    <p>Vooroordelen, privacyrisico's en de toename van AI-gerelateerde incidenten vereisen een robuust ecosysteem voor Verantwoorde AI (RAI).</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg card-content">
+                    <h3 class="text-[#665191]">💰 Kosten & Milieu-impact</h3>
+                    <p>Het trainen van grote modellen is energie-intensief en kostbaar. Efficiëntie en transparantie (bijv. AI Energy Score Ratings) worden belangrijker.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg card-content">
+                    <h3 class="text-[#665191]">📉 Beperkingen van Benchmarks</h3>
+                    <p>Zorgen over benchmarkverzadiging en -overfitting vragen om robuustere, real-world evaluatiemethoden naast statische tests.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg card-content">
+                    <h3 class="text-[#665191]">👨‍💼 Impact op Werkgelegenheid</h3>
+                    <p>Automatisering door AI wakkert debatten aan over banenverlies en de noodzaak voor omscholing en aanpassing van de beroepsbevolking.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg card-content">
+                    <h3 class="text-[#665191]">📜 Regulering & Bestuur</h3>
+                    <p>Er is een toenemende urgentie voor AI-governance raamwerken die innovatie balanceren met veiligheid, transparantie en betrouwbaarheid.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg card-content">
+                    <h3 class="text-[#665191]">🌍 Maatschappelijke Aanpassing</h3>
+                    <p>AI is een fundamentele technologie die economieën en samenlevingen hervormt, wat proactieve planning en dialoog vereist.</p>
+                </div>
+            </div>
+            <div class="mt-10 text-center bg-gradient-to-r from-[#003f5c] to-[#2f4b7c] text-white p-8 rounded-xl shadow-lg">
+                <h3 class="text-2xl font-semibold mb-3">Conclusie: Navigeren op de AI Superhighway</h3>
+                <p class="leading-relaxed max-w-3xl mx-auto">
+                    De AI-revolutie van 2020-2025 heeft een ongekend tempo van innovatie laten zien. De race is verre van voorbij en evolueert continu. De primaire uitdaging verschuift van het bereiken van pure capaciteit naar het verantwoordelijk inzetten en besturen van deze krachtige systemen. Het navigeren op deze AI-superhighway vereist waakzaamheid, aanpassingsvermogen en een diep engagement voor verantwoorde innovatie ten gunste van de mensheid.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <div id="geminiModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close-button" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle" class="text-xl font-semibold mb-4 text-[#003f5c]">Informatie van Gemini</h3>
+            <div id="modalQuerySection" class="mb-4" style="display: none;">
+                <label for="userQueryInput" class="block text-sm font-medium text-gray-700 mb-1">Stel uw vraag:</label>
+                <textarea id="userQueryInput" rows="3" class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-[#ffa600] focus:border-[#ffa600]"></textarea>
+                <button id="submitQueryButton" class="gemini-button mt-2">Verstuur Vraag</button>
+            </div>
+            <div id="modalResponseArea">
+                <p>Een ogenblik geduld, de AI genereert een antwoord...</p>
+                <div class="loader" id="modalLoader"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="text-center p-6 bg-gray-800 text-gray-300 text-sm rounded-t-lg">
+        <p>Infographic gebaseerd op het Deep Research Report "De AI Revolutie (2020-2025)". Gemaakt in mei 2025.</p>
+        <p>Visualisaties door Chart.js en HTML/Tailwind CSS. Geen SVG of Mermaid JS gebruikt.</p>
+    </footer>
+
+    <script>
+        const modal = document.getElementById('geminiModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalResponseArea = document.getElementById('modalResponseArea');
+        const modalLoader = document.getElementById('modalLoader');
+        const modalQuerySection = document.getElementById('modalQuerySection');
+        const userQueryInput = document.getElementById('userQueryInput');
+        const submitQueryButton = document.getElementById('submitQueryButton');
+        let currentGeminiHandler = null;
+
+        const apiKey = ""; // API key will be provided by the environment
+
+        async function callGeminiAPI(prompt) {
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ role: "user", parts: [{ text: prompt }] }]
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) {
+                    const errorBody = await response.text();
+                    console.error("API Error Response:", errorBody);
+                    throw new Error(`API verzoek mislukt met status: ${response.status}`);
+                }
+                const result = await response.json();
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    return result.candidates[0].content.parts[0].text;
+                } else {
+                    console.error("Onverwachte API respons structuur:", result);
+                    return "Kon geen geldig antwoord ontvangen van de AI. Controleer de console voor details.";
+                }
+            } catch (error) {
+                console.error("Fout tijdens aanroepen Gemini API:", error);
+                return `Fout: Kon geen verbinding maken met de AI-service. Details: ${error.message}`;
+            }
+        }
+
+        function showModal() {
+            modalResponseArea.innerHTML = '<p>Een ogenblik geduld, de AI genereert een antwoord...</p><div class="loader" id="modalLoader"></div>';
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            modalQuerySection.style.display = 'none';
+            userQueryInput.value = ''; // Clear input
+            currentGeminiHandler = null;
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        async function showPlayerModal(playerName) {
+            showModal();
+            modalTitle.textContent = `✨ AI Expert over ${playerName}`;
+            modalQuerySection.style.display = 'block';
+            userQueryInput.placeholder = `Stel een specifieke vraag over ${playerName} of laat leeg voor een algemeen overzicht.`;
+            
+            currentGeminiHandler = async () => {
+                modalLoader.style.display = 'block';
+                modalResponseArea.innerHTML = '<p>Een ogenblik geduld, de AI genereert een antwoord...</p><div class="loader" id="modalLoader"></div>'; // Reset for new query
+                let userQuestion = userQueryInput.value.trim();
+                let prompt;
+                if (userQuestion) {
+                    prompt = `Beantwoord de volgende vraag over ${playerName} in de context van AI ontwikkelingen tot begin 2025: "${userQuestion}". Houd het antwoord beknopt en informatief, geschikt voor een infographic.`;
+                } else {
+                    prompt = `Geef een beknopt overzicht van de belangrijkste bijdragen en recente AI-ontwikkelingen van ${playerName} tot begin 2025. Focus op hun rol in de "AI race". Houd het informatief en objectief voor een infographic (max 150 woorden).`;
+                }
+                const responseText = await callGeminiAPI(prompt);
+                modalLoader.style.display = 'none';
+                modalResponseArea.innerHTML = `<p class="text-sm leading-relaxed">${responseText.replace(/\n/g, '<br>')}</p>`;
+            };
+            // Initial call for general overview if no specific question is asked first by user
+            // For this version, we wait for user to click "Verstuur Vraag"
+            modalLoader.style.display = 'none'; // Hide loader initially for player modal
+            modalResponseArea.innerHTML = `<p>Stel hierboven uw vraag over ${playerName} en klik op "Verstuur Vraag".</p>`;
+        }
+        
+        submitQueryButton.onclick = () => {
+            if (currentGeminiHandler) {
+                currentGeminiHandler();
+            }
+        };
+
+        async function showBenchmarkModal(benchmarkName) {
+            showModal();
+            modalTitle.textContent = `✨ Uitleg over ${benchmarkName}`;
+            modalQuerySection.style.display = 'none'; // No user input for this one
+            
+            const prompt = `Leg in eenvoudige termen uit wat de ${benchmarkName} benchmark meet in de context van AI-modellen en waarom het een belangrijke indicator is van AI-capaciteiten. Geef een concreet voorbeeld van wat een hoge score op ${benchmarkName} impliceert. Houd het antwoord beknopt (max 150 woorden) en geschikt voor een infographic.`;
+            
+            const responseText = await callGeminiAPI(prompt);
+            modalLoader.style.display = 'none';
+            modalResponseArea.innerHTML = `<p class="text-sm leading-relaxed">${responseText.replace(/\n/g, '<br>')}</p>`;
+        }
+
+
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            if (!item) return '';
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            }
+            return label;
+        };
+
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#333333'
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: tooltipTitleCallback
+                    },
+                    backgroundColor: '#003f5c',
+                    titleColor: '#FFFFFF',
+                    bodyColor: '#FFFFFF',
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: '#e0e0e0'
+                    },
+                    ticks: {
+                        color: '#333333'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#333333',
+                        maxRotation: 45,
+                        minRotation: 0
+                    }
+                }
+            }
+        };
+        
+        function wrapLabels(label, maxWidth = 16) {
+            if (typeof label !== 'string' || label.length <= maxWidth) {
+                return label;
+            }
+            const words = label.split(' ');
+            let lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if (currentLine.length > 0 && (currentLine + ' ' + word).length > maxWidth) {
+                    lines.push(currentLine.trim());
+                    currentLine = '';
+                }
+                currentLine += (currentLine.length > 0 ? ' ' : '') + word;
+            }
+            if (currentLine.trim().length > 0) {
+                lines.push(currentLine.trim());
+            }
+            return lines.length > 0 ? lines : [label]; 
+        }
+
+        // Chart 1: Parameter Growth
+        const paramCtx = document.getElementById('paramChart').getContext('2d');
+        new Chart(paramCtx, {
+            type: 'line',
+            data: {
+                labels: ['GPT-3 (2020)', 'PaLM (2022)', 'Llama 2 70B (2023)', wrapLabels('Llama 3 405B (Gepl. \'24)',16), wrapLabels('Llama 4 2T (2025)',16)],
+                datasets: [{
+                    label: 'Parameters (Miljard)',
+                    data: [175, 540, 70, 405, 2000],
+                    borderColor: '#2f4b7c',
+                    backgroundColor: 'rgba(47, 75, 124, 0.1)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: { ...commonChartOptions }
+        });
+
+        // Chart 2: Training Data Growth
+        const dataCtx = document.getElementById('dataChart').getContext('2d');
+        new Chart(dataCtx, {
+            type: 'bar',
+            data: {
+                labels: ['GPT-3 (~500B)', 'PaLM (780B)', 'Llama 1 (1.4T)', 'Llama 2 (2T)', 'Llama 3 (15T)', 'Llama 4 (22-40T)'],
+                datasets: [{
+                    label: 'Trainingsdata (Tokens)',
+                    data: [0.5, 0.78, 1.4, 2, 15, 31], // Using midpoint for Llama 4 for simplicity
+                    backgroundColor: ['#665191', '#a05195', '#d45087', '#f95d6a', '#ff7c43', '#ffa600'],
+                }]
+            },
+            options: { ...commonChartOptions, plugins: {...commonChartOptions.plugins, legend: {display: false}}, scales: {...commonChartOptions.scales, y: {...commonChartOptions.scales.y, title: {display: true, text:'Tokens (in Biljoenen)'}}} }
+        });
+
+        // Chart 3: Context Window Expansion
+        const contextCtx = document.getElementById('contextChart').getContext('2d');
+        new Chart(contextCtx, {
+            type: 'line',
+            data: {
+                labels: [wrapLabels('GPT-3 (2020)',12), wrapLabels('Llama 2 (2023)',12), wrapLabels('GPT-4 (2023)',12), wrapLabels('Claude 2.1 (2023)',12), wrapLabels('Gemini 1.5 Pro (2024)',16), wrapLabels('Llama 4 Scout (2025)',16)],
+                datasets: [{
+                    label: 'Contextvenster (Duizend Tokens)',
+                    data: [2.048, 4.096, 32, 200, 1000, 10000], // K tokens
+                    borderColor: '#ffa600',
+                    backgroundColor: 'rgba(255, 166, 0, 0.1)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: { ...commonChartOptions, scales: {...commonChartOptions.scales, y: {...commonChartOptions.scales.y, type: 'logarithmic', title: {display:true, text:'Tokens (Logaritmische Schaal)'}}} }
+        });
+        
+        // Chart 4: MMLU Scores
+        const mmluCtx = document.getElementById('mmluChart').getContext('2d');
+        const mmluModels = ['GPT-3 (2020)', 'PaLM (2022)', 'GPT-4 (2023)', wrapLabels('Gemini 1.0 Ultra (2023)', 20), wrapLabels('Claude 3 Opus (2024)',20), wrapLabels('Gemini 2.5 Pro (2025)',20)];
+        new Chart(mmluCtx, {
+            type: 'bar',
+            data: {
+                labels: mmluModels.map(label => wrapLabels(label, 12)),
+                datasets: [{
+                    label: 'MMLU Score (%)',
+                    data: [43.9, 69.3, 86.4, 90.0, 88.2, 88.6],
+                    backgroundColor: '#2f4b7c',
+                }]
+            },
+            options: { ...commonChartOptions, indexAxis: 'y', plugins: {...commonChartOptions.plugins, legend: {display: false}} }
+        });
+
+        // Chart 5: HumanEval Scores
+        const humanEvalCtx = document.getElementById('humanEvalChart').getContext('2d');
+        const humanEvalModels = ['PaLM (2022)', 'GPT-4 (2023)', wrapLabels('Claude 3 Opus (2024)',20), wrapLabels('Gemini 1.5 Pro (2024)',20), 'GPT-4o (2024)', wrapLabels('Gemini 2.5 Pro (2025)',20), wrapLabels('LLMDebugger (o1) (2025)',20)];
+        new Chart(humanEvalCtx, {
+            type: 'line',
+            data: {
+                labels: humanEvalModels.map(label => wrapLabels(label,12)),
+                datasets: [{
+                    label: 'HumanEval Score (%)',
+                    data: [26.2, 67.0, 84.9, 84.1, 90, 99, 99.4],
+                    borderColor: '#665191',
+                    backgroundColor: 'rgba(102, 81, 145, 0.1)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: { ...commonChartOptions }
+        });
+
+        // Chart 6: Geo Chart (VS vs China)
+        const geoCtx = document.getElementById('geoChart').getContext('2d');
+        new Chart(geoCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Verenigde Staten', 'China', 'Europa'],
+                datasets: [{
+                    label: 'Aantal Opmerkelijke Modellen (2024)',
+                    data: [40, 15, 3],
+                    backgroundColor: ['#003f5c', '#665191', '#ffa600'],
+                    hoverOffset: 4
+                }]
+            },
+            options: { ...commonChartOptions, scales: {x:{display:false}, y:{display:false}} }
+        });
+
+        // Chart 7: Investment Chart
+        const investmentCtx = document.getElementById('investmentChart').getContext('2d');
+        new Chart(investmentCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2023', '2024'],
+                datasets: [{
+                    label: 'Particuliere Investeringen GenAI (Miljard USD)',
+                    data: [ (33.9 / 1.187).toFixed(1) , 33.9], // Approx 2023 from 2024 data
+                    backgroundColor: ['#2f4b7c', '#ffa600'],
+                }]
+            },
+            options: { ...commonChartOptions, plugins: {...commonChartOptions.plugins, legend: {display: false}} }
+        });
+
+    </script>
+</body>
+</html>
